@@ -32,51 +32,41 @@
             "key": "goal",
             "label": "Goal(s)",
             "type": "string",
-            "helpText": "What the agent is supposed to achieve.",
-            "required": true,
-            "list": true,
-            "altersDynamicFields": false
-          },
-          {
-            "key": "constraints",
-            "label": "Constraints",
-            "type": "string",
-            "helpText": "Agent contraints like like use as mininum tokens and interations as possible. See API example to know more.",
-            "default": "If you are unsure how you previously did something or want to recall past events, thinking about similar events will help you remember., Ensure the tool and args are as per current plan and reasoning., Exclusively use the tools listed under \"TOOLS\", REMEMBER to format your response as JSON, using double quotes (\"\") around keys and string values, and commas (,) to separate items in arrays and objects. IMPORTANTLY, to use a JSON object as a string in another JSON object, you need to escape the double quotes.",
+            "helpText": "Goals are the clear objectives you want the AI agent to reach. Think of these as the desired outcomes of the agent's actions. For instance, a goal might be \"Highlight primary customer concerns.\" It's essential to be precise to ensure the agent understands its purpose.\n[Read more about Agent Goals](https://superagi.com/docs/Core%20Components/Agents/agent_provisioning#goals)",
             "required": true,
             "list": true,
             "altersDynamicFields": false
           },
           {
             "key": "instructions",
-            "label": "Instructions",
+            "label": "Instruction(s)",
             "type": "string",
-            "helpText": "These are very specific instructions.",
+            "helpText": "Instructions serve as the roadmap for the agent, guiding it step-by-step toward achieving the set goals. Offering detailed and sequential directions, such as \"First, categorize feedback, then identify recurring themes,\" ensures the agent can operate efficiently and effectively.\n\n[Read more about Agent Instructions](https://superagi.com/docs/Core%20Components/Agents/agent_provisioning#instructions)",
             "required": false,
             "list": true,
             "altersDynamicFields": false
           },
           {
             "key": "tools",
-            "label": "Tools",
+            "label": "Tool(s)",
             "type": "string",
-            "helpText": "Supported toolkit names are:\nCodingToolkit\nEmail Toolkit\nFile Toolkit\nGitHub Toolkit\nGoogle Calendar Toolkit\nGoogle Search Toolkit\nGoogle SERP Toolkit\nImage Generation Toolkit\nJira Toolkit\nSearx Toolkit\nSlack Toolkit\nWeb Scraper Toolkit\nTwitter Toolkit\nKnowledge Search Toolkit\nDuckDuckGo Search Toolkit\nNotion Toolkit\nInstagram Toolkit\n\nPass `[]` if you don't want to use any tool.\n\nNOTE: Some tools like Instagram and Notion are required to be installed from marketplace before they can be used in APIs.\n\nIn case of a custom toolkit, the value of name property of the toolkit needs to be passed in tools. Check this example toolkit https://github.com/TransformerOptimus/SuperAGI/blob/main/superagi/tools/duck_duck_go/duck_duck_go_search_toolkit.py",
+            "helpText": "Tools refer to the specific software, platforms, or utilities at the agent's disposal. By clarifying preferred tools and their applications, like \"CodingToolkit\" you equip the agent with the necessary resources to execute its tasks successfully.\n\n[Review the tools available on SuperAGI](https://superagi.com/docs/Toolkit/)",
             "choices": [
               "CodingToolkit",
-              "Email Toolkit*",
+              "DuckDuckGo Search Toolkit",
               "File Toolkit",
+              "Knowledge Search Toolkit",
+              "Searx Toolkit",
+              "Web Scraper Toolkit",
+              "Email Toolkit*",
               "GitHub Toolkit*",
               "Google Calendar Toolkit*",
               "Google Search Toolkit*",
               "Google SERP Toolkit*",
               "Image Generation Toolkit*",
               "Jira Toolkit*",
-              "Searx Toolkit",
               "Slack Toolkit*",
-              "Web Scraper Toolkit",
               "Twitter Toolkit*",
-              "Knowledge Search Toolkit",
-              "DuckDuckGo Search Toolkit",
               "Notion Toolkit*",
               "Instagram Toolkit*"
             ],
@@ -86,9 +76,9 @@
           },
           {
             "key": "agent_workflow",
-            "label": "Agent Workflow",
+            "label": "Advanced - Agent Workflow",
             "type": "string",
-            "helpText": "Below are supported values for agent workflow:\n\nGoal Based Workflow\nDynamic Task Workflow\nFixed Task Workflow\n\nThese values are case sensitive.",
+            "helpText": "SuperAGI supports a few different kinds of agents. Goal based wokflow is the best for most cases.\n\n[Learn more about Agent Types](https://superagi.com/docs/Core%20Components/Agents/agent_type)",
             "choices": [
               "Goal Based Workflow",
               "Dynamic Task Workflow",
@@ -100,20 +90,29 @@
             "altersDynamicFields": false
           },
           {
-            "key": "iteration_interval",
-            "label": "Iteration Interval",
-            "type": "integer",
-            "helpText": "Time to wait between each iterations.",
-            "default": "500",
+            "key": "constraints",
+            "label": "Advanced - Constraint(s)",
+            "type": "string",
+            "helpText": "Constraints are specific guardrails within which the Agent has to operate. These constraints ensure that the agent operates within the set environment and guidelines are met.\n\nConstraints are pre-defined while creating an agent. However, you can change the constraints if required to better optimize the agent’s behavior.\n\n[Read about Constraints](https://superagi.com/docs/Core%20Components/Agents/agent_provisioning#constraints)",
             "required": false,
+            "list": true,
+            "altersDynamicFields": false
+          },
+          {
+            "key": "iteration_interval",
+            "label": "Advanced - Iteration Interval",
+            "type": "integer",
+            "helpText": "Milliseconds to wait between each re-attempt to accomplish the goal.",
+            "default": "500",
+            "required": true,
             "list": false,
             "altersDynamicFields": false
           },
           {
             "key": "model",
-            "label": "Model",
+            "label": "Advanced - Model",
             "type": "string",
-            "helpText": "Below are supported values for models:\ngpt-4\ngpt-3.5-turbo\ngpt-3.5-turbo-16k",
+            "helpText": "While creating an agent, you can select the Large Language Model of choice with which you would like to deploy your agent.\n\nAs of now, SuperAGI currently supports OpenAI’s GPT 3.5-Turbo, GPT 3.5-Turbo-16k, GPT-4\n\n[Read about models that SuperAGI supports](https://superagi.com/docs/Core%20Components/Agents/agent_provisioning#models)",
             "choices": [
               "gpt-4",
               "gpt-3.5-turbo",
@@ -126,9 +125,9 @@
           },
           {
             "key": "max_iterations",
-            "label": "Max Interations",
+            "label": "Advanced - Max Iterations",
             "type": "integer",
-            "helpText": "Max number of iterations agent can run for.",
+            "helpText": "Maximum Iterations are pre-defined iteration limits that are set for the agent. Since it can get expensive to run LLMs and it is possible for the Agent to hallucinate, you can set the number of iterations within which the agents have to operate.\n\n[Read about Maximum Iterations](https://superagi.com/docs/Core%20Components/Agents/agent_provisioning#maximum-iterations)",
             "default": "25",
             "required": true,
             "list": false,
@@ -152,7 +151,7 @@
           }
         ],
         "perform": {
-          "source": "const tools = bundle.inputData.tools?bundle.inputData.tools.map(tool=>({name: tool.replace('*',\"\")})):[]\nconst options = {\n  // url: 'https://webhook.site/c7f9c205-d02b-45e4-9bb5-58407fad3e7f',\n  url: 'https://app.superagi.com/api/v1/agent',\n  method: 'POST',\n  headers: {\n    'Content-Type': 'application/json',\n    'Accept': 'application/json',\n    'X-API-KEY': bundle.authData.api_key\n  },\n  params: {\n    // 'api_key': bundle.authData.api_key\n  },\n  body: {\n    'name': 'Zapier Agent ' + new Date().toISOString(),\n    'description': \"Created from Zapier\",\n    'goal': bundle.inputData.goal,\n    'agent_workflow': bundle.inputData.agent_workflow,\n    'constraints': bundle.inputData.constraints,\n    'instruction': bundle.inputData.instructions?bundle.inputData.instructions:[],\n    'tools': tools,\n    'iteration_interval': bundle.inputData.iteration_interval,\n    'model': bundle.inputData.model,\n    'max_iterations': bundle.inputData.max_iterations,\n    // 'schedule': {\n    //   start_time: new Date().toISOString(),\n    //   expiry_runs: 1\n    // }\n  }\n}\n\nreturn z.request(options)\n  .then((response) => {\n    response.throwForStatus();\n    const results = response.json;\n    const agent_id = results.agent_id;\n    return z.request({\n      url: `https://app.superagi.com/api/v1/agent/${agent_id}/run`,\n      method: 'POST',\n      headers: {\n        'Content-Type': 'application/json',\n        'Accept': 'application/json',\n        'X-API-KEY': bundle.authData.api_key\n      },\n      body:{}\n    }) .then((response) => {\n    response.throwForStatus();\n    const run_result = response.json;\n    const run_id = run_result.run_id;\n    \n    return {\n      run_id, agent_id\n    };  \n    })\n    \n    // You can do any parsing you need for results here before returning them\n    \n  });"
+          "source": "const tools = bundle.inputData.tools?bundle.inputData.tools.map(tool=>({name: tool.replace('*',\"\")})):[];\n\nlet constraints = bundle.inputData.constraints;\nif (!constraints){\n  constraints = [\n    \"If you are unsure how you previously did something or want to recall past events, thinking about similar events will help you remember.\",\n    \"Ensure the tool and args are as per current plan and reasoning\",\n    'Exclusively use the tools listed under \"TOOLS\"',\n    'REMEMBER to format your response as JSON, using double quotes (\"\") around keys and string values, and commas (,) to separate items in arrays and objects. IMPORTANTLY, to use a JSON object as a string in another JSON object, you need to escape the double quotes.'\n    ];\n}\n\nconst options = {\n  // url: 'https://webhook.site/c7f9c205-d02b-45e4-9bb5-58407fad3e7f',\n  url: 'https://app.superagi.com/api/v1/agent',\n  method: 'POST',\n  headers: {\n    'Content-Type': 'application/json',\n    'Accept': 'application/json',\n    'X-API-KEY': bundle.authData.api_key\n  },\n  params: {\n    // 'api_key': bundle.authData.api_key\n  },\n  body: {\n    'name': 'Zapier Agent ' + new Date().toISOString(),\n    'description': \"Created from Zapier\",\n    'goal': bundle.inputData.goal,\n    'agent_workflow': bundle.inputData.agent_workflow,\n    'constraints': constraints,\n    'instruction': bundle.inputData.instructions?bundle.inputData.instructions:[],\n    'tools': tools,\n    'iteration_interval': bundle.inputData.iteration_interval,\n    'model': bundle.inputData.model,\n    'max_iterations': bundle.inputData.max_iterations,\n    // 'schedule': {\n    //   start_time: new Date().toISOString(),\n    //   expiry_runs: 1\n    // }\n  }\n}\n\nreturn z.request(options)\n  .then((response) => {\n    response.throwForStatus();\n    const results = response.json;\n    const agent_id = results.agent_id;\n    return z.request({\n      url: `https://app.superagi.com/api/v1/agent/${agent_id}/run`,\n      method: 'POST',\n      headers: {\n        'Content-Type': 'application/json',\n        'Accept': 'application/json',\n        'X-API-KEY': bundle.authData.api_key\n      },\n      body:{}\n    }) .then((response) => {\n    response.throwForStatus();\n    const run_result = response.json;\n    const run_id = run_result.run_id;\n    \n    return {\n      run_id, agent_id\n    };  \n    })\n    \n    // You can do any parsing you need for results here before returning them\n    \n  });"
         }
       }
     }
