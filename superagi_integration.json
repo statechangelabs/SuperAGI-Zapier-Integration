@@ -1,0 +1,160 @@
+{
+  "version": "1.0.0",
+  "platformVersion": "15.0.1",
+  "authentication": {
+    "type": "custom",
+    "test": {
+      "source": "const options = {\n  url: 'https://app.superagi.com/api/v1/',\n  method: 'POST',\n  headers: {\n    'X-API-KEY': bundle.authData.api_key,\n    'Content-Type': \"application/json\"\n  },\n  \n  // params: {\n\n  // },\n  // body: JSON.stringify({\n  //   run_ids: []\n  // })\n}\nreturn new Promise(r=>r(true)); \n// return z.request(options)\n//   .then((response) => {\n//     response.throwForStatus();\n//     const results = response.json;\n\n//     // You can do any parsing you need for results here before returning them\n\n//     return results;\n//   });"
+    },
+    "fields": [
+      {
+        "computed": false,
+        "key": "api_key",
+        "required": true,
+        "label": "API Key",
+        "type": "string"
+      }
+    ],
+    "customConfig": {}
+  },
+  "creates": {
+    "SuperAGI_create_agent": {
+      "display": {
+        "description": "Create an Agent using SuperAGI API",
+        "hidden": false,
+        "label": "Create and Run Agent"
+      },
+      "key": "SuperAGI_create_agent",
+      "noun": "Agent",
+      "operation": {
+        "inputFields": [
+          {
+            "key": "goal",
+            "label": "Goal(s)",
+            "type": "string",
+            "helpText": "What the agent is supposed to achieve.",
+            "required": true,
+            "list": true,
+            "altersDynamicFields": false
+          },
+          {
+            "key": "constraints",
+            "label": "Constraints",
+            "type": "string",
+            "helpText": "Agent contraints like like use as mininum tokens and interations as possible. See API example to know more.",
+            "default": "If you are unsure how you previously did something or want to recall past events, thinking about similar events will help you remember., Ensure the tool and args are as per current plan and reasoning., Exclusively use the tools listed under \"TOOLS\", REMEMBER to format your response as JSON, using double quotes (\"\") around keys and string values, and commas (,) to separate items in arrays and objects. IMPORTANTLY, to use a JSON object as a string in another JSON object, you need to escape the double quotes.",
+            "required": true,
+            "list": true,
+            "altersDynamicFields": false
+          },
+          {
+            "key": "instructions",
+            "label": "Instructions",
+            "type": "string",
+            "helpText": "These are very specific instructions.",
+            "required": false,
+            "list": true,
+            "altersDynamicFields": false
+          },
+          {
+            "key": "tools",
+            "label": "Tools",
+            "type": "string",
+            "helpText": "Supported toolkit names are:\nCodingToolkit\nEmail Toolkit\nFile Toolkit\nGitHub Toolkit\nGoogle Calendar Toolkit\nGoogle Search Toolkit\nGoogle SERP Toolkit\nImage Generation Toolkit\nJira Toolkit\nSearx Toolkit\nSlack Toolkit\nWeb Scraper Toolkit\nTwitter Toolkit\nKnowledge Search Toolkit\nDuckDuckGo Search Toolkit\nNotion Toolkit\nInstagram Toolkit\n\nPass `[]` if you don't want to use any tool.\n\nNOTE: Some tools like Instagram and Notion are required to be installed from marketplace before they can be used in APIs.\n\nIn case of a custom toolkit, the value of name property of the toolkit needs to be passed in tools. Check this example toolkit https://github.com/TransformerOptimus/SuperAGI/blob/main/superagi/tools/duck_duck_go/duck_duck_go_search_toolkit.py",
+            "choices": [
+              "CodingToolkit",
+              "Email Toolkit*",
+              "File Toolkit",
+              "GitHub Toolkit*",
+              "Google Calendar Toolkit*",
+              "Google Search Toolkit*",
+              "Google SERP Toolkit*",
+              "Image Generation Toolkit*",
+              "Jira Toolkit*",
+              "Searx Toolkit",
+              "Slack Toolkit*",
+              "Web Scraper Toolkit",
+              "Twitter Toolkit*",
+              "Knowledge Search Toolkit",
+              "DuckDuckGo Search Toolkit",
+              "Notion Toolkit*",
+              "Instagram Toolkit*"
+            ],
+            "required": false,
+            "list": true,
+            "altersDynamicFields": false
+          },
+          {
+            "key": "agent_workflow",
+            "label": "Agent Workflow",
+            "type": "string",
+            "helpText": "Below are supported values for agent workflow:\n\nGoal Based Workflow\nDynamic Task Workflow\nFixed Task Workflow\n\nThese values are case sensitive.",
+            "choices": [
+              "Goal Based Workflow",
+              "Dynamic Task Workflow",
+              "Fixed Task Workflow"
+            ],
+            "default": "Goal Based Workflow",
+            "required": true,
+            "list": false,
+            "altersDynamicFields": false
+          },
+          {
+            "key": "iteration_interval",
+            "label": "Iteration Interval",
+            "type": "integer",
+            "helpText": "Time to wait between each iterations.",
+            "default": "500",
+            "required": false,
+            "list": false,
+            "altersDynamicFields": false
+          },
+          {
+            "key": "model",
+            "label": "Model",
+            "type": "string",
+            "helpText": "Below are supported values for models:\ngpt-4\ngpt-3.5-turbo\ngpt-3.5-turbo-16k",
+            "choices": [
+              "gpt-4",
+              "gpt-3.5-turbo",
+              "gpt-3.5-turbo-16k"
+            ],
+            "default": "gpt-3.5-turbo",
+            "required": true,
+            "list": false,
+            "altersDynamicFields": false
+          },
+          {
+            "key": "max_iterations",
+            "label": "Max Interations",
+            "type": "integer",
+            "helpText": "Max number of iterations agent can run for.",
+            "default": "25",
+            "required": true,
+            "list": false,
+            "altersDynamicFields": false
+          }
+        ],
+        "sample": {
+          "run_id": 16537,
+          "agent_id": 9729
+        },
+        "outputFields": [
+          {
+            "key": "run_id",
+            "type": "integer",
+            "label": "Run ID"
+          },
+          {
+            "key": "agent_id",
+            "label": "Agent ID",
+            "type": "integer"
+          }
+        ],
+        "perform": {
+          "source": "const tools = bundle.inputData.tools?bundle.inputData.tools.map(tool=>({name: tool.replace('*',\"\")})):[]\nconst options = {\n  // url: 'https://webhook.site/c7f9c205-d02b-45e4-9bb5-58407fad3e7f',\n  url: 'https://app.superagi.com/api/v1/agent',\n  method: 'POST',\n  headers: {\n    'Content-Type': 'application/json',\n    'Accept': 'application/json',\n    'X-API-KEY': bundle.authData.api_key\n  },\n  params: {\n    // 'api_key': bundle.authData.api_key\n  },\n  body: {\n    'name': 'Zapier Agent ' + new Date().toISOString(),\n    'description': \"Created from Zapier\",\n    'goal': bundle.inputData.goal,\n    'agent_workflow': bundle.inputData.agent_workflow,\n    'constraints': bundle.inputData.constraints,\n    'instruction': bundle.inputData.instructions?bundle.inputData.instructions:[],\n    'tools': tools,\n    'iteration_interval': bundle.inputData.iteration_interval,\n    'model': bundle.inputData.model,\n    'max_iterations': bundle.inputData.max_iterations,\n    // 'schedule': {\n    //   start_time: new Date().toISOString(),\n    //   expiry_runs: 1\n    // }\n  }\n}\n\nreturn z.request(options)\n  .then((response) => {\n    response.throwForStatus();\n    const results = response.json;\n    const agent_id = results.agent_id;\n    return z.request({\n      url: `https://app.superagi.com/api/v1/agent/${agent_id}/run`,\n      method: 'POST',\n      headers: {\n        'Content-Type': 'application/json',\n        'Accept': 'application/json',\n        'X-API-KEY': bundle.authData.api_key\n      },\n      body:{}\n    }) .then((response) => {\n    response.throwForStatus();\n    const run_result = response.json;\n    const run_id = run_result.run_id;\n    \n    return {\n      run_id, agent_id\n    };  \n    })\n    \n    // You can do any parsing you need for results here before returning them\n    \n  });"
+        }
+      }
+    }
+  }
+}
