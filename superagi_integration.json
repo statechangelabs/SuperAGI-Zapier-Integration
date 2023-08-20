@@ -12,7 +12,8 @@
         "key": "api_key",
         "required": true,
         "label": "API Key",
-        "type": "string"
+        "type": "string",
+        "helpText": "Find your API key on https://app.superagi.com\nClick the gear icon on the upper right, then click API keys, then press create key. Then copy the key it generates and paste it in this box.\n"
       }
     ],
     "customConfig": {}
